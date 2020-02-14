@@ -21,21 +21,7 @@ public class Unit : MonoBehaviour
         Die();
     }
 
-    public virtual void CooldownFirst()
-    {
-
-    }
-
-    public virtual void CooldownSecond()
-    {
-
-    }
-
-    public virtual void CooldownThird()
-    {
-
-    }
-
+    
     public virtual void Die()
     {
         Destroy(gameObject);

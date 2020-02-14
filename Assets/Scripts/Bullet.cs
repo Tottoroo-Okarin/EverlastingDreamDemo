@@ -6,9 +6,21 @@ public class Bullet : MonoBehaviour
 {
     private float speed = 10;
     private Vector3 direction;
-    public Vector3 Direction { set { direction = value; } } 
+    public Vector3 Direction { set { direction = value; } }
 
     private SpriteRenderer sprite;
+
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        Unit unit = collider.GetComponent<Unit>();
+        if (unit && unit is Ghost)
+        {
+            
+            unit.ReceiveDamage();
+
+        }
+    }
 
     private void Awake()
     {
@@ -27,3 +39,4 @@ public class Bullet : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
     }
 }
+

@@ -10,7 +10,8 @@ public enum CharState
     Jump,
     Hurt,
     Crouch,
-    Attack
+    Attack,
+    Death
 }
 
 public class Character : Unit
@@ -25,7 +26,7 @@ public class Character : Unit
 
     private bool isGrounded = false;
 
-    private Bullet bullet;
+    
 
 
     private CharState State
@@ -34,6 +35,7 @@ public class Character : Unit
         set { animator.SetInteger("State", (int)value); }
     }
 
+    Bullet bullet;
 
     new private Rigidbody2D rigidbody;
     private Animator animator;
@@ -93,24 +95,29 @@ public class Character : Unit
 
     private void Shoot()
     {   
-            State = CharState.Attack;
-            Vector3 position = transform.position;
-            position.y += 0.4F;
-            position.x -= 1.5F;
-            Bullet newBullet = Instantiate(bullet, position, bullet.transform.rotation) as Bullet;
-            newBullet.Direction = newBullet.transform.right * (sprite.flipX ? -1.0F : 1.0F);
        
+        Vector3 position = transform.position;
+        
+        State = CharState.Attack;
+       
+        Bullet newBullet = Instantiate(bullet, position, bullet.transform.rotation) as Bullet;
+        newBullet.Direction = newBullet.transform.right * (sprite.flipX ? -1.0f : 1.0f);
+        
+      
     }
 
     public override void ReceiveDamage()
     {
-        if (State != CharState.Hurt)
+        State = CharState.Hurt;
+        lives--;
+        if (lives == 0)
         {
-            State = CharState.Hurt;
-            lives--;
-            rigidbody.velocity = Vector3.zero;
-            rigidbody.AddForce(transform.up * 4.0F, ForceMode2D.Impulse);
+            State = CharState.Death;
+            Die();
         }
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.AddForce(transform.up * 8.0F, ForceMode2D.Impulse);
+        
     }
 
     private void CheckGround()
